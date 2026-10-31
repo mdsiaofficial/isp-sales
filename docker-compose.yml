@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:19rc1-alpine3.24
+    container_name: isp_sales_db
+    restart: always
+    environment:
+      POSTGRES_USER: isp_user
+      POSTGRES_PASSWORD: isp_password123
+      POSTGRES_DB: isp_sales_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - isp_sales_pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U isp_user -d isp_sales_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend/IspSales.Api
+      dockerfile: Dockerfile
+    container_name: isp_sales_backend
+    restart: always
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=isp_sales_db;Username=isp_user;Password=isp_password123"
+      Jwt__Key: "super_secret_isp_sales_development_key_minimum_32_characters_long_2026!"
+      Jwt__Issuer: "IspSalesApi"
+      Jwt__Audience: "IspSalesApp"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: isp_sales_frontend
+    restart: always
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+
+volumes:
+  isp_sales_pgdata:

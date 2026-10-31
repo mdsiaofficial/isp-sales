@@ -144,7 +144,7 @@ The goal is to develop a simple and functional ISP Sales Management System where
 ###
 
 Technology
-backend: asp.net core 10.0.403 (mcr.microsoft.com/dotnet/sdk:10.0-alpine)
-frontend: angular 22 + tailwindcss 4 (node:26.13.0-trixie)
-database: postgresql 19 (postgres:19rc1-alpine3.24)
+backend: asp.net core 10.0.403 (docker image: mcr.microsoft.com/dotnet/sdk:10.0-alpine) (in /backend/ directory)
+frontend: angular 22 (docker image: node:26.13.0-trixie) (in /frontend/ directory)
+database: postgresql 19 (docker image: postgres:19rc1-alpine3.24) (run into docker)
 devops: docker (for running locally database inside docker also)
