@@ -1,0 +1,150 @@
+# Project Requirements
+## ISP Sales Management System with Chatbot
+
+### 1. Project Overview
+
+The goal of this project is to build a simple web application for managing an ISP company's internet packages, customer connection requests, and sales agents.
+
+Customers will be able to view internet packages and request a new internet connection through a chatbot. The Admin will manage packages, coverage areas, and agents. Sales Agents will be able to view customer orders and update their statuses.
+
+### 2. User Roles
+
+**Admin**
+- Log in to the system.
+- Add, edit, and delete internet packages.
+- Add, edit, and delete coverage areas.
+- Create and manage sales agent accounts.
+- View all customer orders.
+
+**Sales Agent**
+- Log in to the system.
+- View customer orders.
+- Update order statuses.
+
+**Customer**
+- View available internet packages.
+- Use the chatbot.
+- Submit new connection requests.
+- Request to be contacted by a sales agent.
+
+### 3. Internet Package Management
+
+The Admin must be able to create packages with the following information:
+
+- Package Name
+- Internet Speed
+- Monthly Price
+
+Customers must be able to view active internet packages on the website and through the chatbot.
+
+### 4. Coverage Area Management
+
+The system must initially include the following coverage areas.
+
+**Dhaka**
+- Uttara
+- Ashulia
+- Savar
+- Mohammadpur
+
+**Chattogram**
+- Colonelhat
+- Agrabad
+- Boropol
+
+The Admin must be able to add, edit, and delete coverage areas.
+
+### 5. Customer Chatbot
+
+The chatbot must provide three options.
+
+**Option 1: View Packages**
+- Display all active internet packages.
+
+**Option 2: New Connection**
+- Allow customers to select a city.
+- Allow customers to select a coverage area.
+- Collect the customer's name, phone number, address, and preferred internet package.
+- Create a customer order when the request is submitted.
+- Set the initial order status to `PENDING`.
+
+If the customer's area is not included in the coverage list, the system must collect the customer's name, phone number, and area name and save the information as a Future Lead.
+
+**Option 3: Talk to an Agent**
+- Allow customers to submit a callback request using their name and phone number.
+- Make callback requests visible in the Admin Dashboard.
+
+### 6. Admin Dashboard
+
+The Admin Dashboard must display the following information:
+
+- Total Orders
+- Pending Orders
+- Completed Connections
+- Total Sales Agents
+
+The Admin must also be able to:
+
+- Manage internet packages.
+- Manage coverage areas.
+- Create and manage sales agents.
+- View customer orders.
+- View callback requests.
+- View future leads.
+
+### 7. Sales Agent Dashboard
+
+Sales Agents must be able to:
+
+- Log in to the system.
+- View the customer order list.
+- View customer names, phone numbers, addresses, and selected packages.
+- Update order statuses.
+
+The available order statuses must be:
+
+- `PENDING`
+- `CONFIRMED`
+- `CONNECTED`
+- `CANCELLED`
+
+### 8. Basic Security
+
+- The system must provide login functionality for Admins and Sales Agents.
+- Admin and Sales Agent permissions must be different.
+- Required fields must be validated before submission.
+- Passwords must be stored securely.
+- All application data must be saved in the database.
+
+### 9. Required Pages
+
+**Public Website**
+- Home Page
+- Internet Packages Page
+- Customer Chatbot
+
+**Admin Dashboard**
+- Dashboard
+- Package Management
+- Coverage Area Management
+- Agent Management
+- Order Management
+- Callback Requests
+- Future Leads
+
+**Sales Agent Dashboard**
+- Login Page
+- Dashboard
+- Customer Orders
+
+### 10. Final Goal
+
+The goal is to develop a simple and functional ISP Sales Management System where customers can request new internet connections through a chatbot, the Admin can manage the entire system, and Sales Agents can manage customer orders and update their statuses.
+
+###
+
+Technology
+backend: asp.net core 10.0.403 (mcr.microsoft.com/dotnet/sdk:10.0-alpine)
+frontend: angular 22 + tailwindcss 4 (node:26.13.0-trixie)
+database: postgresql 19 (postgres:19rc1-alpine3.24)
+devops: docker (for running locally database inside docker also)
