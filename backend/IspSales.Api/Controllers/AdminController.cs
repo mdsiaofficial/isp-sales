@@ -206,6 +206,9 @@ public class AdminController : ControllerBase
 
         if (exists) return BadRequest(new { message = "Username or email is already taken." });
 
+        var existing = await _context.Users.AnyAsync(u => u.Username == request.Username || u.Email == request.Email);
+        if (existing) return BadRequest(new { message = "Username or email already exists." });
+
         var agent = new User
         {
             Username = request.Username.Trim(),
@@ -243,6 +246,7 @@ public class AdminController : ControllerBase
 
         if (!string.IsNullOrWhiteSpace(request.NewPassword))
         {
+            if (request.NewPassword.Length < 8) return BadRequest(new { message = "Password must be at least 8 characters." });
             agent.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
         }
 
@@ -294,11 +298,14 @@ public class AdminController : ControllerBase
     }
 
     [HttpPatch("callbacks/{id}/status")]
-    public async Task<IActionResult> UpdateCallbackStatus(Guid id, [FromBody] string status)
+    public async Task<IActionResult> UpdateCallbackStatus(Guid id, [FromBody] UpdateCallbackStatusRequest request)
     {
         var callback = await _context.CallbackRequests.FindAsync(id);
         if (callback == null) return NotFound();
-        callback.Status = status;
+var allowed = new[] { "PENDING", "CONTACTED", "COMPLETED", "CANCELLED" };
+        if (!allowed.Contains(request.Status.ToUpperInvariant())) return BadRequest(new { message = "Invalid status." });
+        callback.Status = request.Status.ToUpperInvariant();
+        if (!string.IsNullOrWhiteSpace(request.Notes)) callback.Notes = request.Notes;
         await _context.SaveChangesAsync();
         return Ok(callback);
     }

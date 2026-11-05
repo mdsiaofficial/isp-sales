@@ -22,6 +22,9 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
+        if (request == null)
+            return BadRequest(new { message = "Request body is required." });
+
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
             return BadRequest(new { message = "Username and password are required." });

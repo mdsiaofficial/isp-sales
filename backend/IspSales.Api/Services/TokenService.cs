@@ -23,7 +23,7 @@ public class TokenService : ITokenService
     public string GenerateToken(User user)
     {
         var jwtSettings = _config.GetSection("Jwt");
-        var secretKey = jwtSettings["Key"] ?? "super_secret_isp_sales_development_key_minimum_32_characters_long_2026!";
+        var secretKey = jwtSettings["Key"] ?? throw new InvalidOperationException("Jwt:Key is required.");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

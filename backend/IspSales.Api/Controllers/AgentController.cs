@@ -20,10 +20,11 @@ public class AgentController : ControllerBase
     }
 
     [HttpGet("orders")]
-    public async Task<IActionResult> GetOrders([FromQuery] OrderStatus? status)
+    public async Task<IActionResult> GetOrders([FromQuery] OrderStatus? status, [FromQuery] string? search, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
+        page = Math.Max(1, page);
+        pageSize = Math.Clamp(pageSize, 1, 100);
         var query = _context.CustomerOrders
-            .Include(o => o.City)
             .Include(o => o.CoverageArea)
             .Include(o => o.Package)
             .Include(o => o.AssignedAgent)
@@ -34,8 +35,20 @@ public class AgentController : ControllerBase
             query = query.Where(o => o.Status == status.Value);
         }
 
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var s = search.Trim().ToLower();
+            query = query.Where(o =>
+                o.CustomerName.ToLower().Contains(s) ||
+                o.CustomerPhone.ToLower().Contains(s) ||
+                o.OrderNumber.ToLower().Contains(s));
+        }
+
+        var total = await query.CountAsync();
         var orders = await query
             .OrderByDescending(o => o.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(o => new
             {
                 o.Id,
@@ -56,7 +69,7 @@ public class AgentController : ControllerBase
             })
             .ToListAsync();
 
-        return Ok(orders);
+        return Ok(new PagedResult<object>(orders, total, page, pageSize));
     }
 
     [HttpPatch("orders/{id}/status")]

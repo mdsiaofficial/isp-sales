@@ -16,6 +16,8 @@ public class AppDbContext : DbContext
     public DbSet<CustomerOrder> CustomerOrders => Set<CustomerOrder>();
     public DbSet<CallbackRequest> CallbackRequests => Set<CallbackRequest>();
     public DbSet<FutureLead> FutureLeads => Set<FutureLead>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
